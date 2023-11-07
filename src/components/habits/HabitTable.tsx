@@ -15,6 +15,9 @@ import { useHabitStore, useDateStore } from "@/store/HabitStore"
 import { useEffect } from 'react'
 import { Button } from "../ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { syncHabits } from "@/lib/supabaseDB"
 
 export default function HabitTable() {
 
@@ -26,9 +29,27 @@ export default function HabitTable() {
     sub(startDate, { days: index })
   )
 
-  const [habits, getHabitsState] = useHabitStore((state) => [
-    state.habits, state.getHabitsState,
+  const [habits, getHabitsState, setHabits] = useHabitStore((state) => [
+    state.habits, state.getHabitsState, state.setHabits
   ])
+
+ const sensors = useSensors(
+  useSensor(PointerSensor),
+  useSensor(KeyboardSensor, {
+    coordinateGetter: sortableKeyboardCoordinates,
+  })
+ )
+
+ const handleDragEnd = (event: any) => {
+  const {active, over} = event
+  if (habits) {
+    const oldIndex = habits.findIndex(habit => habit.id === active.id)
+    const newIndex = habits.findIndex(habit => habit.id === over.id)
+    const newHabits = arrayMove(habits, oldIndex, newIndex).map((habit, index) => ({ ...habit, order: index }))
+    setHabits(newHabits)
+    syncHabits(newHabits)
+  }
+ }
 
   useEffect(() => {
     getHabitsState()
@@ -63,13 +84,19 @@ export default function HabitTable() {
           </TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
-        {
-          habits?.map(habit => 
-            <HabitRow key={habit.id} id={habit.id} name={habit.name} dates_completed={habit.dates_completed} days={days} order={habit.order}/>
-          )
-        }
-      </TableBody>
+      {habits &&
+        <TableBody>
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={habits} strategy={verticalListSortingStrategy}>
+              {
+                habits.map(habit => 
+                  <HabitRow key={habit.id} habit={habit} days={days} />
+                )
+              }
+            </SortableContext>
+          </DndContext>
+        </TableBody>
+      }
     </Table>
   )
 }

@@ -6,13 +6,14 @@ import { format } from 'date-fns'
 import { useHabitStore, useDateStore } from "@/store/HabitStore"
 import { updateDatesCompleted } from '@/lib/supabaseDB'
 import HabitOptions from '../HabitOptions'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { Grip } from 'lucide-react'
+import { Button } from '../ui/button'
 
 interface RowProps {
-  id: string;
-  name: string;
-  dates_completed: string[];
+  habit: habit;
   days: Date[];
-  order: number;
 }
 
 interface SquareProps {
@@ -20,7 +21,9 @@ interface SquareProps {
   dates_completed: string[];
 }
 
-export default function HabitRow({ id, name, dates_completed, days, order }: RowProps) {
+export default function HabitRow({ habit, days }: RowProps) {
+
+  const { id, name, dates_completed, order} = habit
 
   const [numOfDays] = useDateStore((state) => [
     state.numOfDays,
@@ -29,6 +32,13 @@ export default function HabitRow({ id, name, dates_completed, days, order }: Row
   const [habits, setHabits] = useHabitStore((state) => [
     state.habits, state.setHabits
   ])
+
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+
+  const draggableStyle = {
+    transform: CSS.Transform.toString(transform),
+    transition
+  }
 
   const HabitSquare = ({ date, dates_completed }: SquareProps) => {
 
@@ -69,8 +79,11 @@ export default function HabitRow({ id, name, dates_completed, days, order }: Row
   
   
   return (
-    <TableRow>
-      <TableCell>
+    <TableRow ref={setNodeRef} style={draggableStyle}>
+      <TableCell className='flex items-center'>
+        <Button variant='ghost' className='h-8 w-8 p-0' {...attributes} {...listeners}>
+          <Grip className='h-4 w-4'/>
+        </Button>
         {name}
       </TableCell>
       {HabitSquares}

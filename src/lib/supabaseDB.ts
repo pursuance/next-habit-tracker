@@ -29,3 +29,13 @@ export const deleteHabit = async (id: string) => {
     .delete()
     .eq('id', id)
 }
+
+export const syncHabits =  async (habits: habit[]) => {
+  for (const habit of habits) {
+    const supabase = createClientComponentClient()
+    const { data, error } = await supabase
+      .from('habits')
+      .update({ order: habit.order })
+      .eq('id', habit.id)
+  }
+}
