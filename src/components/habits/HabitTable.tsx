@@ -17,7 +17,8 @@ import { Button } from "../ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { syncHabits } from "@/lib/supabaseDB"
+import { syncHabitOrder } from "@/lib/supabaseDB"
+import { restrictToVerticalAxis, restrictToWindowEdges } from "@dnd-kit/modifiers"
 
 export default function HabitTable() {
 
@@ -47,7 +48,7 @@ export default function HabitTable() {
     const newIndex = habits.findIndex(habit => habit.id === over.id)
     const newHabits = arrayMove(habits, oldIndex, newIndex).map((habit, index) => ({ ...habit, order: index }))
     setHabits(newHabits)
-    syncHabits(newHabits)
+    syncHabitOrder(newHabits)
   }
  }
 
@@ -86,7 +87,7 @@ export default function HabitTable() {
       </TableHeader>
       {habits &&
         <TableBody>
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}>
             <SortableContext items={habits} strategy={verticalListSortingStrategy}>
               {
                 habits.map(habit => 

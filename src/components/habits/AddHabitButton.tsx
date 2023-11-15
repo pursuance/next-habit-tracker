@@ -3,7 +3,7 @@ import { PlusCircle } from "lucide-react";
 
 export default function AddHabitButton() {
   return (
-    <Button className="gap-2 absolute bottom-10 right-10">
+    <Button className="gap-2">
       <PlusCircle />Add a Habit
     </Button>
   )

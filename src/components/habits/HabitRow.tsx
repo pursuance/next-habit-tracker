@@ -44,10 +44,8 @@ export default function HabitRow({ habit, days }: RowProps) {
 
     const formattedDate = format(date, 'MM/dd/y')
 
-    const isCompleted = () => {
-      return dates_completed?.includes(formattedDate)
-    }
-
+    const isCompleted = () => dates_completed?.includes(formattedDate)
+    
     const handleCheckedChange = (checked: boolean) => {
       checked ?
         dates_completed = [formattedDate, ...dates_completed]
