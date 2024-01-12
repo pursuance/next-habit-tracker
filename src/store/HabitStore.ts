@@ -15,7 +15,12 @@ export const useDateStore = create<DateState>((set) => ({
   numOfDays: 7,
   setNumOfDays: (numOfDays) => set({ numOfDays }),
   startDate: new Date(),
+  setStartDate: (startDate) => set({ startDate }),
   increaseStartDate: () => set((state) => ({ startDate: add(state.startDate, { days: 1 })})),
   decreaseStartDate: () => set((state) => ({ startDate: sub(state.startDate, { days: 1 })}))
 }))
 
+export const useDNDLockStore = create<DNDLockState>((set) => ({
+  isLocked: true,
+  flipLockState: () => set((state) => ({ isLocked: !state.isLocked }))
+}))

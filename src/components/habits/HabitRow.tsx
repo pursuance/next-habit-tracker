@@ -3,7 +3,7 @@
 import { TableRow, TableCell } from '@/components/ui/table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { format } from 'date-fns'
-import { useHabitStore, useDateStore } from "@/store/HabitStore"
+import { useHabitStore, useDateStore, useDNDLockStore } from "@/store/HabitStore"
 import { updateDatesCompleted } from '@/lib/supabaseDB'
 import HabitOptions from '../HabitOptions'
 import { useSortable } from '@dnd-kit/sortable'
@@ -32,6 +32,8 @@ export default function HabitRow({ habit, days }: RowProps) {
   const [habits, setHabits] = useHabitStore((state) => [
     state.habits, state.setHabits
   ])
+
+  const [isLocked] = useDNDLockStore((state) => [state.isLocked])
 
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
 
@@ -79,9 +81,11 @@ export default function HabitRow({ habit, days }: RowProps) {
   return (
     <TableRow ref={setNodeRef} style={draggableStyle}>
       <TableCell className='flex items-center'>
-        <Button variant='ghost' className='h-8 w-8 p-0' {...attributes} {...listeners}>
-          <Grip className='h-4 w-4'/>
-        </Button>
+        {isLocked ||
+          <Button variant='ghost' className='h-8 w-8 p-0' {...attributes} {...listeners}>
+            <Grip className='h-4 w-4'/>
+          </Button>
+        }
         {name}
       </TableCell>
       {HabitSquares}

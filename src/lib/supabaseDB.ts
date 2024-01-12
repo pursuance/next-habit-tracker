@@ -16,9 +16,10 @@ export const updateDatesCompleted = async ( {id, dates_completed}: habit ) => {
 
 export const addNewHabit = async (name: string, order: number) => {
   const supabase = createClientComponentClient()
+  const user_id = (await supabase.auth.getUser()).data?.user?.id
   const { data, error } = await supabase
     .from('habits')
-    .upsert({ name, dates_completed: [], order })
+    .upsert({ name, dates_completed: [], order, user_id })
     .select()
 }
 

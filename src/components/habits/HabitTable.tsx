@@ -19,6 +19,8 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { syncHabitOrder } from "@/lib/supabaseDB"
 import { restrictToVerticalAxis, restrictToWindowEdges } from "@dnd-kit/modifiers"
+import DNDLockToggle from "../DNDLockToggle"
+import ReturnToTodayButton from "../ReturnToTodayButton"
 
 export default function HabitTable() {
 
@@ -60,7 +62,20 @@ export default function HabitTable() {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Habit</TableHead>
+          <TableHead className="flex justify-between items-center w-min">
+            Habit
+          <DNDLockToggle />
+          <div className="flex items-center">
+            <ReturnToTodayButton />
+            {isToday(startDate) ?
+              <div className="h-8 w-8 p-0"></div>
+              :
+              <Button variant='ghost' className="h-8 w-8 p-0" onClick={increaseStartDate}>
+                <ChevronLeft className="h-4 w-4"/>
+              </Button>
+            }
+          </div>
+          </TableHead>
           {
             days.map((day, index) => 
               <TableHead key={index}>
@@ -72,13 +87,6 @@ export default function HabitTable() {
             )
           }
           <TableHead className="flex w-min items-center gap-1 p-0">
-            {isToday(startDate) ?
-              <div className="h-8 w-8 p-0"></div>
-              :
-              <Button variant='ghost' className="h-8 w-8 p-0" onClick={increaseStartDate}>
-                <ChevronLeft className="h-4 w-4"/>
-              </Button>
-            }
             <Button variant='ghost' className="h-8 w-8 p-0" onClick={decreaseStartDate}>
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -86,7 +94,7 @@ export default function HabitTable() {
         </TableRow>
       </TableHeader>
       {habits &&
-        <TableBody>
+        <TableBody className="w-min">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}>
             <SortableContext items={habits} strategy={verticalListSortingStrategy}>
               {

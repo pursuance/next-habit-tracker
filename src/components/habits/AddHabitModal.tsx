@@ -29,11 +29,15 @@ export default function Page() {
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const lastHabit: habit | undefined = habits?.reduce((a, b) => 
-      (a.order > b.order) ? a : b
-    )
-    const newHabitOrder: number = lastHabit ? lastHabit.order + 1 : 0
-    addNewHabit(values.name, newHabitOrder)
+    if (habits && habits.length !== 0) {
+      const lastHabit: habit | undefined = habits?.reduce((a, b) => 
+        (a.order > b.order) ? a : b
+      )
+      const newHabitOrder: number = lastHabit.order + 1
+      addNewHabit(values.name, newHabitOrder)
+    } else {
+      addNewHabit(values.name, 0)
+    }
     getHabitsState()
   }
 
