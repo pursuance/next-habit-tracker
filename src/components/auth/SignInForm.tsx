@@ -6,8 +6,8 @@ import * as z from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from '@/components/ui/input'
 import { Button } from "../ui/button"
-import { signInUser } from "@/lib/supabaseAuth"
 import { useRouter } from "next/navigation"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 
 const formSchema = z.object({
   email: z.string().min(4).max(50),
@@ -24,12 +24,20 @@ export function SignInForm() {
     }
   })
 
+  const supabase = createClientComponentClient()
   const router = useRouter()
+
+  const signInUser = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+    router.push('/habits')
+  }
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const { email, password } = values
     signInUser(email, password)
-    router.push('/habits')
   }
 
   return(
@@ -57,7 +65,7 @@ export function SignInForm() {
               <FormItem>
                 <FormLabel>Create Password</FormLabel>
                 <FormControl>
-                  <Input placeholder='password' {...field} />
+                  <Input type='password' placeholder='password' {...field} />
                 </FormControl>
               </FormItem>
             )}

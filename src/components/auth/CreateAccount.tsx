@@ -3,11 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from 'zod'
-import { DialogHeader, DialogTitle } from "../ui/dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from '@/components/ui/input'
 import { Button } from "../ui/button"
-import { createNewUser } from "@/lib/supabaseAuth"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { useRouter } from "next/router"
 
 const formSchema = z.object({
   email: z.string().min(4).max(50),
@@ -24,9 +24,23 @@ export function CreateAccount() {
     }
   })
 
+  const supabase = createClientComponentClient()
+  const router = useRouter()
+
+  const createNewUser = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${location.origin}/auth/callback`
+      }
+    })
+  }
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const { email, password } = values
     createNewUser(email, password)
+    router.push('/habits')
   }
 
   return(
@@ -54,7 +68,7 @@ export function CreateAccount() {
               <FormItem>
                 <FormLabel>Create Password</FormLabel>
                 <FormControl>
-                  <Input placeholder='password' {...field} />
+                  <Input type='password' placeholder='password' {...field} />
                 </FormControl>
               </FormItem>
             )}
