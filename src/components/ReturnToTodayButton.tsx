@@ -21,7 +21,7 @@ export default function ReturnToTodayButton() {
   return (
     <>
       {(compareAsc(startDate, appearanceDate) === -1) ?
-        <Button variant='ghost' className="h-8 w-8 p-0" onClick={returnToToday}>
+        <Button asChild variant='ghost' className="h-8 w-8 p-0" onClick={returnToToday}>
           <ChevronFirst className="h-4 w-4" />
         </Button>
         :

@@ -32,8 +32,8 @@ export default function HabitTable() {
     sub(startDate, { days: index })
   )
 
-  const [habits, getHabitsState, setHabits] = useHabitStore((state) => [
-    state.habits, state.getHabitsState, state.setHabits
+  const [habits, getHabitsState, setHabits, addFlag] = useHabitStore((state) => [
+    state.habits, state.getHabitsState, state.setHabits, state.addFlag
   ])
 
  const sensors = useSensors(
@@ -56,7 +56,7 @@ export default function HabitTable() {
 
   useEffect(() => {
     getHabitsState()
-  }, [getHabitsState])
+  }, [addFlag])
 
   return (
     <Table>
@@ -70,7 +70,7 @@ export default function HabitTable() {
             {isToday(startDate) ?
               <div className="h-8 w-8 p-0"></div>
               :
-              <Button variant='ghost' className="h-8 w-8 p-0" onClick={increaseStartDate}>
+              <Button asChild variant='ghost' className="h-8 w-8 p-0" onClick={increaseStartDate}>
                 <ChevronLeft className="h-4 w-4"/>
               </Button>
             }
@@ -87,7 +87,7 @@ export default function HabitTable() {
             )
           }
           <TableHead className="flex w-min items-center gap-1 p-0">
-            <Button variant='ghost' className="h-8 w-8 p-0" onClick={decreaseStartDate}>
+            <Button asChild variant='ghost' className="h-8 w-8 p-0" onClick={decreaseStartDate}>
               <ChevronRight className="h-4 w-4" />
             </Button>
           </TableHead>

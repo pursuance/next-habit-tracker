@@ -10,6 +10,8 @@ interface HabitsState  {
   habits: habit[] | null;
   getHabitsState: () => void
   setHabits: (habits: habit[]) => void;
+  addFlag: boolean;
+  flipAddFlag: () => void
 }
 
 interface DateState {

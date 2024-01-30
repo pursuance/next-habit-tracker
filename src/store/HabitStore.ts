@@ -8,7 +8,9 @@ export const useHabitStore = create<HabitsState>((set) => ({
     const habits = await getHabitsFromDB()
     set({ habits })
   },
-  setHabits: (updatedHabits) => set({ habits: updatedHabits })
+  setHabits: (updatedHabits) => set({ habits: updatedHabits }),
+  addFlag: false,
+  flipAddFlag: () => set((state) => ({ addFlag: !state.addFlag }))
 }))
 
 export const useDateStore = create<DateState>((set) => ({

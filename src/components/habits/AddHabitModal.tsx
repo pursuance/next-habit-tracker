@@ -17,8 +17,8 @@ const formSchema = z.object({
 
 export default function Page() {
 
-  const [habits, getHabitsState] = useHabitStore((state) => [
-    state.habits, state.getHabitsState
+  const [habits, getHabitsState, flipAddFlag] = useHabitStore((state) => [
+    state.habits, state.getHabitsState, state.flipAddFlag
   ])
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,8 +35,10 @@ export default function Page() {
       )
       const newHabitOrder: number = lastHabit.order + 1
       addNewHabit(values.name, newHabitOrder)
+      flipAddFlag()
     } else {
       addNewHabit(values.name, 0)
+      flipAddFlag()
     }
     getHabitsState()
   }

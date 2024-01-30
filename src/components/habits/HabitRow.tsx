@@ -23,7 +23,7 @@ interface SquareProps {
 
 export default function HabitRow({ habit, days }: RowProps) {
 
-  const { id, name, dates_completed, order} = habit
+  const { id, name, dates_completed, order, user_id } = habit
 
   const [numOfDays] = useDateStore((state) => [
     state.numOfDays,
@@ -54,7 +54,7 @@ export default function HabitRow({ habit, days }: RowProps) {
         :
         dates_completed = dates_completed.filter((date) => date !== formattedDate)
 
-      const updatedhabit: habit = { id, name, dates_completed, order }
+      const updatedhabit: habit = { id, name, dates_completed, order, user_id }
       
       const updatedHabits = habits?.map((habit) => {
         if (habit.id === updatedhabit.id) {
