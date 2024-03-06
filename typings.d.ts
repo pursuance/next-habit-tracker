@@ -4,6 +4,7 @@ interface habit {
   dates_completed: string[];
   order: number;
   user_id: string;
+  editable?: boolean;
 }
 
 interface HabitsState  {

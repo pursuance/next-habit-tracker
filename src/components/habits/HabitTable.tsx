@@ -62,19 +62,19 @@ export default function HabitTable() {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="flex justify-between items-center w-min">
+          <TableHead className="flex justify-between items-center">
             Habit
-          <DNDLockToggle />
-          <div className="flex items-center">
-            <ReturnToTodayButton />
-            {isToday(startDate) ?
-              <div className="h-8 w-8 p-0"></div>
-              :
-              <Button asChild variant='ghost' className="h-8 w-8 p-0" onClick={increaseStartDate}>
-                <ChevronLeft className="h-4 w-4"/>
-              </Button>
-            }
-          </div>
+            <DNDLockToggle />
+            <div className="flex items-center">
+              <ReturnToTodayButton />
+              {isToday(startDate) ?
+                <div className="h-8 w-8 p-0"></div>
+                :
+                <Button asChild variant='ghost' className="h-8 w-8 p-0" onClick={increaseStartDate}>
+                  <ChevronLeft className="h-4 w-4"/>
+                </Button>
+              }
+            </div>
           </TableHead>
           {
             days.map((day, index) => 

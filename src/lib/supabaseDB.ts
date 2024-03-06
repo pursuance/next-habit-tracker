@@ -40,3 +40,11 @@ export const syncHabitOrder =  async (habits: habit[]) => {
       .eq('id', habit.id)
   }
 }
+
+export const renameHabitinDB = async (id: string, name: string) => {
+  const supabase = createClientComponentClient()
+  const { data, error } = await supabase
+    .from('habits')
+    .update({ name })
+    .eq('id', id)
+}

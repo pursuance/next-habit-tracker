@@ -10,6 +10,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Grip } from 'lucide-react'
 import { Button } from '../ui/button'
+import ChangeHabitNameField from './ChangeHabitNameField'
 
 interface RowProps {
   habit: habit;
@@ -23,7 +24,7 @@ interface SquareProps {
 
 export default function HabitRow({ habit, days }: RowProps) {
 
-  const { id, name, dates_completed, order, user_id } = habit
+  const { id, name, dates_completed, order, user_id, editable } = habit
 
   const [numOfDays] = useDateStore((state) => [
     state.numOfDays,
@@ -80,13 +81,17 @@ export default function HabitRow({ habit, days }: RowProps) {
   
   return (
     <TableRow ref={setNodeRef} style={draggableStyle}>
-      <TableCell className='flex items-center'>
-        {isLocked ||
+      <TableCell className='flex items-center w-40'>
+        {isLocked ?
+          <div className='h-8 w-0'></div> :
           <Button variant='ghost' className='h-8 w-8 p-0' {...attributes} {...listeners}>
             <Grip className='h-4 w-4'/>
           </Button>
         }
-        {name}
+        {
+          editable ?
+          <ChangeHabitNameField habit={habit}/> : name
+        }
       </TableCell>
       {HabitSquares}
       <TableCell>

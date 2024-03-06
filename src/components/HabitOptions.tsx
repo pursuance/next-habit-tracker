@@ -11,10 +11,10 @@ import {
 import { deleteHabit } from "@/lib/supabaseDB"
 import { useHabitStore } from "@/store/HabitStore"
 import { Button } from "./ui/button"
-import { MoreVertical, Trash } from "lucide-react"
+import { MoreVertical, Trash, Pencil } from "lucide-react"
 
 interface Props {
-  id: string
+  id: string;
 }
 
 export default function HabitOptions({ id }: Props) {
@@ -29,6 +29,16 @@ export default function HabitOptions({ id }: Props) {
     updatedHabits && setHabits(updatedHabits)
   }
 
+  const handleRename = (id: string) => {
+    const updatedHabits = habits?.map((habit) => {
+      if (habit.id === id) {
+        return {...habit, editable: true}
+      } else return habit
+    })
+
+    updatedHabits && setHabits(updatedHabits)
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -38,6 +48,12 @@ export default function HabitOptions({ id }: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
+      <DropdownMenuItem onClick={() => handleRename(id)} className="cursor-pointer">
+          <span className="flex items-center">
+            <Pencil className="h-4 w-4 mr-1"/>
+            <span className="text-gray-300 mr-1">|</span> Rename
+          </span>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleDelete(id)} className="cursor-pointer">
           <span className="text-red-700 flex items-center">
             <Trash className="red h-4 w-4 mr-1"/>

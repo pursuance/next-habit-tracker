@@ -15,7 +15,7 @@ export default async function Page() {
 
   return (
     <>
-      <div className="relative h-screen">
+      <div className="relative h-screen px-8">
         <HabitTable />
         <Dialog>
           <DialogTrigger asChild>
